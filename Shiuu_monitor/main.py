@@ -1,4 +1,3 @@
-from FacadeSingletonManager import FacadeManager
 from Commands.CommandExibirMenu import CommandExibirMenu
 
 def main():

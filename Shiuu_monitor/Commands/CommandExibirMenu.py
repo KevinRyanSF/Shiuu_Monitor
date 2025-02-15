@@ -29,6 +29,7 @@ class CommandExibirMenu(Command):
             else:
                 print("Opção inválida. Tente novamente.")
                 time.sleep(2)
+        time.sleep(2)
         current_command.execute()  # Chama o execute do comando que foi escolhido
 
 

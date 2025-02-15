@@ -1,4 +1,5 @@
 from database import BancoDeDados
+from hashlib import sha256
 
 class LoginReal:
     def __init__(self, banco):
@@ -10,7 +11,9 @@ class LoginReal:
             print("Email não encontrado")
             return False
         else:
-            if senha == usuario["senha"]:
+            senha_crip = usuario["senha"]
+            senha = sha256(senha.encode()).hexdigest()
+            if senha == senha_crip:
                 return True
             else:
                 return False
