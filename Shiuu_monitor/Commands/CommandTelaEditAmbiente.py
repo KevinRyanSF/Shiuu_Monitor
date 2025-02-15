@@ -1,5 +1,5 @@
-from Commands.Command import Command
-from FacadeSingletonManager import FacadeManager
+from Commands.CommandAbstract import Command
+from FacadeSingleton.FacadeSingletonManager import FacadeManager
 import time
 
 

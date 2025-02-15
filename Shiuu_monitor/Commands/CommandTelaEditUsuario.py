@@ -1,5 +1,5 @@
-from Commands.Command import Command
-from FacadeSingletonManager import FacadeManager
+from Commands.CommandAbstract import Command
+from FacadeSingleton.FacadeSingletonManager import FacadeManager
 import time
 
 class CommandTelaEditUsuario(Command):
@@ -39,14 +39,14 @@ class CommandTelaEditUsuario(Command):
                     self.__facade.editar_senha_usuario(user['email'])
                     break
                 elif opcao == "4":
+                    self.__facade.adicionar_ambientes_usuario(user['email'])
                     from Commands.CommandTelaUsuario import CommandTelaUsuario
                     current_command = CommandTelaUsuario()
-                    self.__facade.adicionar_ambientes_usuario(user['email'])
                     break
                 elif opcao == "5":
+                    self.__facade.remover_ambientes_usuario(user['email'])
                     from Commands.CommandTelaUsuario import CommandTelaUsuario
                     current_command = CommandTelaUsuario()
-                    self.__facade.remover_ambientes_usuario(user['email'])
                     break
                 elif opcao == "6":
                     from Commands.CommandTelaUsuario import CommandTelaUsuario

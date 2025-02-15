@@ -1,8 +1,8 @@
-from Commands.CommandExibirMenu import CommandExibirMenu
+from FacadeSingleton.FacadeSingletonManager import FacadeManager
 
 def main():
-    menu_command = CommandExibirMenu()  # Criando o comando
-    menu_command.execute()  # Executando o menu
+    facede = FacadeManager()
+    facede.iniciar()
 
 if __name__ == "__main__":
     main()

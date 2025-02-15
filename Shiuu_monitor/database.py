@@ -1,4 +1,6 @@
 import sqlite3
+from calendar import day_abbr
+
 
 class BancoDeDados:
     def __init__(self, db_name: str):
@@ -79,10 +81,6 @@ class BancoDeDados:
             print(f"Erro ao criar tabelas: {e}")
         finally:
             self.close()
-
-
-
-
 
 
     def connect(self):
@@ -179,3 +177,19 @@ class BancoDeDados:
             self.close()
 
 
+    def search_all_by(self, table, column, data=None):
+        """Executa uma query de seleção e retorna os resultados como uma lista de dicionários."""
+        query = f"SELECT * FROM {table} WHERE {column} = ?"
+        try:
+            self.connect()
+            self.cursor.row_factory = sqlite3.Row  # Configura o cursor para retornar os dados como dicionários
+            self.cursor.execute(query, (data, ))
+            rows = self.cursor.fetchall()
+
+            # Converte cada linha em um dicionário
+            return [dict(row) for row in rows]
+        except sqlite3.Error as e:
+            print(f"Erro ao buscar dados: {e}")
+            return []
+        finally:
+            self.close()

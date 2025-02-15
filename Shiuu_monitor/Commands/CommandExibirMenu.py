@@ -1,10 +1,10 @@
-from Commands.Command import Command
+from Commands.CommandAbstract import Command
 from Commands.CommandTelaPrincipal import CommandTelaPrincipal
-from FacadeSingletonManager import FacadeManager
 import time
 
 class CommandExibirMenu(Command):
     def __init__(self):
+        from FacadeSingleton.FacadeSingletonManager import FacadeManager
         self.__facade = FacadeManager()
 
     def execute(self):
