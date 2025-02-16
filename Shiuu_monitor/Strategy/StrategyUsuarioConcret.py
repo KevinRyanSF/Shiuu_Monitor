@@ -1,7 +1,7 @@
-from Strategy.StrategyUsuarioAbstract import UsuarioStrategy
+from Strategy.StrategyUsuarioAbstract import UsuarioStrategyAbstract
 
 
-class UsuarioAdmin(UsuarioStrategy):
+class StrategyUsuarioAdmin(UsuarioStrategyAbstract):
 
     def pode_acessar_usuarios(self):
         return True
@@ -19,7 +19,7 @@ class UsuarioAdmin(UsuarioStrategy):
         return True
 
 
-class UsuarioFiscal(UsuarioStrategy):
+class StrategyUsuarioFiscal(UsuarioStrategyAbstract):
 
     def pode_acessar_usuarios(self):
         print("Acesso negado, requer nível de administrador!")

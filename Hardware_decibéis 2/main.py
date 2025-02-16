@@ -28,4 +28,4 @@ def get_number():
 
 if __name__ == '__main__':
     threading.Thread(target=generate_random_number, daemon=True).start()
-    app.run(host='0.0.0.0', port=5005)
+    app.run(host='127.0.0.1', port=5005)

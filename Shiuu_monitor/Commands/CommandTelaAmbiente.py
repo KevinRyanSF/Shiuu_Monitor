@@ -1,6 +1,6 @@
 from Commands.CommandAbstract import Command
 from FacadeSingleton.FacadeSingletonManager import FacadeManager
-from Strategy.StrategyUsuarioConcret import UsuarioAdmin, UsuarioFiscal
+from Strategy.StrategyUsuarioConcret import StrategyUsuarioAdmin, StrategyUsuarioFiscal
 import time
 
 class CommandTelaAmbiente(Command):
@@ -9,9 +9,9 @@ class CommandTelaAmbiente(Command):
         self.log_user = self.__facade.get_usuario_logado()
 
         if self.log_user["cargo"] == 1:
-            self.usuario_strategy = UsuarioAdmin()
+            self.usuario_strategy = StrategyUsuarioAdmin()
         else:
-            self.usuario_strategy = UsuarioFiscal()
+            self.usuario_strategy = StrategyUsuarioFiscal()
 
     def execute(self):
         current_command = self

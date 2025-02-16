@@ -1,8 +1,8 @@
-from Proxy.LoginReal import LoginReal
+from Proxy.ProxyLoginReal import ProxyLoginReal
 
 class ProxyLogin:
     def __init__(self):
-        self.real = LoginReal("Shiuu_monitor.db")
+        self.real = ProxyLoginReal("Shiuu_monitor.db")
         self.tentativas = {}
 
     def autenticar(self, email, senha):

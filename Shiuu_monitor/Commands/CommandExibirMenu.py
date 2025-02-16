@@ -11,6 +11,7 @@ class CommandExibirMenu(Command):
         current_command = self
         while True:
             self.__facade.clear_screen()
+            print("SHIUU MONITOR")
             print("TELA DE LOGIN")
             print("+--------------------------------------+")
             print("| 1. LOGIN                             |")
@@ -31,10 +32,4 @@ class CommandExibirMenu(Command):
                 time.sleep(2)
         time.sleep(2)
         current_command.execute()  # Chama o execute do comando que foi escolhido
-
-
-
-
-
-
 

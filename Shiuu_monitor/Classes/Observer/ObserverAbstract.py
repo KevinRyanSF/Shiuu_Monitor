@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class Observer(ABC):
+class ObserverAbstract(ABC):
     @abstractmethod
     def update(self, ambiente, dado):
         pass

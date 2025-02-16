@@ -376,6 +376,7 @@ imported by:
 <span class="moduletype">Package</span>  <div class="import">
 imported by:
     <a href="#Classes.Observer">Classes.Observer</a>
+ &#8226;   <a href="#Classes.Relatorio">Classes.Relatorio</a>
  &#8226;   <a href="#Classes.nivel">Classes.nivel</a>
 
   </div>
@@ -392,9 +393,49 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#Classes.Observer.ObserverAbstract">Classes.Observer.ObserverAbstract</a>
- &#8226;   <a href="#Classes.Observer.ObserverAmbiente">Classes.Observer.ObserverAmbiente</a>
+    <a href="#Classes.Observer.GrupoAbstract">Classes.Observer.GrupoAbstract</a>
+ &#8226;   <a href="#Classes.Observer.GrupoAmbiente">Classes.Observer.GrupoAmbiente</a>
+ &#8226;   <a href="#Classes.Observer.ObserverAbstract">Classes.Observer.ObserverAbstract</a>
  &#8226;   <a href="#Classes.Observer.ObserverUsuario">Classes.Observer.ObserverUsuario</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="Classes.Observer.GrupoAbstract"></a>
+  <a target="code" href="///C:/Shiuu_monitor/Classes/Observer/GrupoAbstract.py" type="text/plain"><tt>Classes.Observer.GrupoAbstract</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#Classes.Observer">Classes.Observer</a>
+ &#8226;   <a href="#abc">abc</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#Classes.Observer.GrupoAmbiente">Classes.Observer.GrupoAmbiente</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="Classes.Observer.GrupoAmbiente"></a>
+  <a target="code" href="///C:/Shiuu_monitor/Classes/Observer/GrupoAmbiente.py" type="text/plain"><tt>Classes.Observer.GrupoAmbiente</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#Classes.Observer">Classes.Observer</a>
+ &#8226;   <a href="#Classes.Observer.GrupoAbstract">Classes.Observer.GrupoAbstract</a>
+ &#8226;   <a href="#Classes.Observer.ObserverUsuario">Classes.Observer.ObserverUsuario</a>
+ &#8226;   <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
+ &#8226;   <a href="#datetime">datetime</a>
+ &#8226;   <a href="#requests">requests</a>
+ &#8226;   <a href="#time">time</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
 
   </div>
 
@@ -418,16 +459,37 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="Classes.Observer.ObserverAmbiente"></a>
-  <a target="code" href="///C:/Shiuu_monitor/Classes/Observer/ObserverAmbiente.py" type="text/plain"><tt>Classes.Observer.ObserverAmbiente</tt></a>
+  <a name="Classes.Observer.ObserverUsuario"></a>
+  <a target="code" href="///C:/Shiuu_monitor/Classes/Observer/ObserverUsuario.py" type="text/plain"><tt>Classes.Observer.ObserverUsuario</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#Classes.Observer">Classes.Observer</a>
- &#8226;   <a href="#Classes.Observer.ObserverUsuario">Classes.Observer.ObserverUsuario</a>
+ &#8226;   <a href="#Classes.Observer.ObserverAbstract">Classes.Observer.ObserverAbstract</a>
+ &#8226;   <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
+ &#8226;   <a href="#email.mime.multipart">email.mime.multipart</a>
+ &#8226;   <a href="#email.mime.text">email.mime.text</a>
+ &#8226;   <a href="#smtplib">smtplib</a>
+ &#8226;   <a href="#time">time</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#Classes.Observer.GrupoAmbiente">Classes.Observer.GrupoAmbiente</a>
+ &#8226;   <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="Classes.Relatorio"></a>
+  <a target="code" href="///C:/Shiuu_monitor/Classes/Relatorio.py" type="text/plain"><tt>Classes.Relatorio</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#Classes">Classes</a>
  &#8226;   <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
  &#8226;   <a href="#datetime">datetime</a>
- &#8226;   <a href="#requests">requests</a>
- &#8226;   <a href="#time">time</a>
+ &#8226;   <a href="#fpdf">fpdf</a>
 
   </div>
   <div class="import">
@@ -439,32 +501,12 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="Classes.Observer.ObserverUsuario"></a>
-  <a target="code" href="///C:/Shiuu_monitor/Classes/Observer/ObserverUsuario.py" type="text/plain"><tt>Classes.Observer.ObserverUsuario</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#Classes.Observer">Classes.Observer</a>
- &#8226;   <a href="#Classes.Observer.ObserverAbstract">Classes.Observer.ObserverAbstract</a>
- &#8226;   <a href="#email.mime.multipart">email.mime.multipart</a>
- &#8226;   <a href="#email.mime.text">email.mime.text</a>
- &#8226;   <a href="#smtplib">smtplib</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#Classes.Observer.ObserverAmbiente">Classes.Observer.ObserverAmbiente</a>
- &#8226;   <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
-
-  </div>
-
-</div>
-
-<div class="node">
   <a name="Classes.nivel"></a>
   <a target="code" href="///C:/Shiuu_monitor/Classes/nivel.py" type="text/plain"><tt>Classes.nivel</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#Classes">Classes</a>
+ &#8226;   <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
 
   </div>
   <div class="import">
@@ -720,16 +762,15 @@ imported by:
   <a target="code" href="///C:/Shiuu_monitor/FacadeSingleton/FacadeSingletonManager.py" type="text/plain"><tt>FacadeSingleton.FacadeSingletonManager</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#Classes.Observer.ObserverAmbiente">Classes.Observer.ObserverAmbiente</a>
+    <a href="#Classes.Observer.GrupoAmbiente">Classes.Observer.GrupoAmbiente</a>
  &#8226;   <a href="#Classes.Observer.ObserverUsuario">Classes.Observer.ObserverUsuario</a>
+ &#8226;   <a href="#Classes.Relatorio">Classes.Relatorio</a>
  &#8226;   <a href="#Classes.nivel">Classes.nivel</a>
  &#8226;   <a href="#Commands.CommandExibirMenu">Commands.CommandExibirMenu</a>
  &#8226;   <a href="#FacadeSingleton">FacadeSingleton</a>
  &#8226;   <a href="#Proxy.ProxyLogin">Proxy.ProxyLogin</a>
  &#8226;   <a href="#copy">copy</a>
  &#8226;   <a href="#database">database</a>
- &#8226;   <a href="#datetime">datetime</a>
- &#8226;   <a href="#fpdf">fpdf</a>
  &#8226;   <a href="#hashlib">hashlib</a>
  &#8226;   <a href="#maskpass">maskpass</a>
  &#8226;   <a href="#os">os</a>
@@ -740,7 +781,10 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#Classes.Observer.ObserverAmbiente">Classes.Observer.ObserverAmbiente</a>
+    <a href="#Classes.Observer.GrupoAmbiente">Classes.Observer.GrupoAmbiente</a>
+ &#8226;   <a href="#Classes.Observer.ObserverUsuario">Classes.Observer.ObserverUsuario</a>
+ &#8226;   <a href="#Classes.Relatorio">Classes.Relatorio</a>
+ &#8226;   <a href="#Classes.nivel">Classes.nivel</a>
  &#8226;   <a href="#Commands.CommandExibirMenu">Commands.CommandExibirMenu</a>
  &#8226;   <a href="#Commands.CommandTelaAmbiente">Commands.CommandTelaAmbiente</a>
  &#8226;   <a href="#Commands.CommandTelaEditAmbiente">Commands.CommandTelaEditAmbiente</a>
@@ -826,26 +870,8 @@ imported by:
   <a target="code" href="-" type="text/plain"><tt>Proxy</tt></a>
 <span class="moduletype">NamespacePackage</span>  <div class="import">
 imported by:
-    <a href="#Proxy.LoginReal">Proxy.LoginReal</a>
- &#8226;   <a href="#Proxy.ProxyLogin">Proxy.ProxyLogin</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="Proxy.LoginReal"></a>
-  <a target="code" href="///C:/Shiuu_monitor/Proxy/LoginReal.py" type="text/plain"><tt>Proxy.LoginReal</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#Proxy">Proxy</a>
- &#8226;   <a href="#database">database</a>
- &#8226;   <a href="#hashlib">hashlib</a>
-
-  </div>
-  <div class="import">
-imported by:
     <a href="#Proxy.ProxyLogin">Proxy.ProxyLogin</a>
+ &#8226;   <a href="#Proxy.ProxyLoginReal">Proxy.ProxyLoginReal</a>
 
   </div>
 
@@ -857,12 +883,30 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#Proxy">Proxy</a>
- &#8226;   <a href="#Proxy.LoginReal">Proxy.LoginReal</a>
+ &#8226;   <a href="#Proxy.ProxyLoginReal">Proxy.ProxyLoginReal</a>
 
   </div>
   <div class="import">
 imported by:
     <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="Proxy.ProxyLoginReal"></a>
+  <a target="code" href="///C:/Shiuu_monitor/Proxy/ProxyLoginReal.py" type="text/plain"><tt>Proxy.ProxyLoginReal</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#Proxy">Proxy</a>
+ &#8226;   <a href="#database">database</a>
+ &#8226;   <a href="#hashlib">hashlib</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#Proxy.ProxyLogin">Proxy.ProxyLogin</a>
 
   </div>
 
@@ -1900,7 +1944,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#Classes.Observer.ObserverAbstract">Classes.Observer.ObserverAbstract</a>
+    <a href="#Classes.Observer.GrupoAbstract">Classes.Observer.GrupoAbstract</a>
+ &#8226;   <a href="#Classes.Observer.ObserverAbstract">Classes.Observer.ObserverAbstract</a>
  &#8226;   <a href="#Commands.CommandAbstract">Commands.CommandAbstract</a>
  &#8226;   <a href="#Strategy.StrategyUsuarioAbstract">Strategy.StrategyUsuarioAbstract</a>
  &#8226;   <a href="#_collections_abc">_collections_abc</a>
@@ -3087,7 +3132,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
- &#8226;   <a href="#Proxy.LoginReal">Proxy.LoginReal</a>
+ &#8226;   <a href="#Proxy.ProxyLoginReal">Proxy.ProxyLoginReal</a>
 
   </div>
 
@@ -3132,8 +3177,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#Classes.Observer.ObserverAmbiente">Classes.Observer.ObserverAmbiente</a>
- &#8226;   <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
+    <a href="#Classes.Observer.GrupoAmbiente">Classes.Observer.GrupoAmbiente</a>
+ &#8226;   <a href="#Classes.Relatorio">Classes.Relatorio</a>
  &#8226;   <a href="#_strptime">_strptime</a>
  &#8226;   <a href="#calendar">calendar</a>
  &#8226;   <a href="#email.utils">email.utils</a>
@@ -6405,7 +6450,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
+    <a href="#Classes.Relatorio">Classes.Relatorio</a>
  &#8226;   <a href="#fpdf.fonts">fpdf.fonts</a>
  &#8226;   <a href="#fpdf.fpdf">fpdf.fpdf</a>
  &#8226;   <a href="#fpdf.html">fpdf.html</a>
@@ -6855,7 +6900,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#FacadeSingleton.FacadeSingletonManager">FacadeSingleton.FacadeSingletonManager</a>
- &#8226;   <a href="#Proxy.LoginReal">Proxy.LoginReal</a>
+ &#8226;   <a href="#Proxy.ProxyLoginReal">Proxy.ProxyLoginReal</a>
  &#8226;   <a href="#charset_normalizer.models">charset_normalizer.models</a>
  &#8226;   <a href="#fpdf.py3k">fpdf.py3k</a>
  &#8226;   <a href="#hmac">hmac</a>
@@ -9631,7 +9676,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#Classes.Observer.ObserverAmbiente">Classes.Observer.ObserverAmbiente</a>
+    <a href="#Classes.Observer.GrupoAmbiente">Classes.Observer.GrupoAmbiente</a>
  &#8226;   <a href="#requests">requests</a>
  &#8226;   <a href="#requests.__version__">requests.__version__</a>
  &#8226;   <a href="#requests._internal_utils">requests._internal_utils</a>
@@ -10903,7 +10948,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#Classes.Observer.ObserverAmbiente">Classes.Observer.ObserverAmbiente</a>
+    <a href="#Classes.Observer.GrupoAmbiente">Classes.Observer.GrupoAmbiente</a>
+ &#8226;   <a href="#Classes.Observer.ObserverUsuario">Classes.Observer.ObserverUsuario</a>
  &#8226;   <a href="#Commands.CommandExibirMenu">Commands.CommandExibirMenu</a>
  &#8226;   <a href="#Commands.CommandTelaAmbiente">Commands.CommandTelaAmbiente</a>
  &#8226;   <a href="#Commands.CommandTelaEditAmbiente">Commands.CommandTelaEditAmbiente</a>

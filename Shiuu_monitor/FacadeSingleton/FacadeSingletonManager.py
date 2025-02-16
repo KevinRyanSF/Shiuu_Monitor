@@ -1,13 +1,14 @@
 import os, maskpass, copy, time
+import threading
+import subprocess
+from hashlib import sha256
 
 from Classes.Observer.ObserverUsuario import Usuario
-from Classes.Observer.ObserverAmbiente import Ambiente
+from Classes.Observer.GrupoAmbiente import Ambiente
 from Classes.nivel import Nivel
 from Proxy.ProxyLogin import ProxyLogin
 from database import BancoDeDados
-from hashlib import sha256
-from datetime import datetime
-from fpdf import FPDF
+from Classes.Relatorio import Relatorio
 
 
 class FacadeManager:
@@ -111,104 +112,55 @@ class FacadeManager:
         return escolha
 
 
-
-
     def cadastrar_usuario(self):
-        self.clear_screen()
-        print("CADASTRAR USUÁRIO")
-        nome = input("Digite o nome de usuário: ")
-        email = input("Digite o email: ")
-        cargo = int(input("Digite o cargo (0-Fiscal ou 1-Admin): "))
-        while True:
-            senha = self.solicitar_senha()
-            conf_senha = self.solicitar_senha()
-            if senha == conf_senha:
-                break
-            else:
-                print("Senhas diferentes, digite novamente.")
-        senha_armazenada = self.encriptar_senha(senha)
-        user = Usuario(nome, email, cargo, senha_armazenada)
-        usuario_data = {
-            'nome': user.nome,
-            'email': user.email,
-            'cargo': user.cargo,
-            'senha': user.senha
-        }
-        self.db.insert("usuarios", usuario_data)
-        user = self.db.fetch_one("usuarios", "email", user.email)
-        if cargo == 0:
-            print("Escolha os ambientes do usuário:")
-            time.sleep(2)
-            escolha = self.escolher_ambientes([])
-            for i in escolha:
-                data_rel_user_amb = {
-                    'id_usuario': user['id'],
-                    'id_ambiente': i,
-                }
-                self.db.insert("usuario_ambientes", data_rel_user_amb)
-
-        else:
-            all_ambientes = self.db.fetch_all("ambientes")
-            if not all_ambientes:
-                pass
-            else:
-                for i in all_ambientes:
-                    data_rel_user_amb = {
-                        'id_usuario': user['id'],
-                        'id_ambiente': i['id'],
-                    }
-                    self.db.insert("usuario_ambientes", data_rel_user_amb)
+        try:
+            self.clear_screen()
+            print("CADASTRAR USUÁRIO")
+            nome = input("Digite o nome de usuário: ")
+            email = input("Digite o email: ")
+            cargo = int(input("Digite o cargo (0-Fiscal ou 1-Admin): "))
+            while True:
+                senha = self.solicitar_senha()
+                conf_senha = self.solicitar_senha()
+                if senha == conf_senha:
+                    break
+                else:
+                    print("Senhas diferentes, digite novamente.")
+            senha_armazenada = self.encriptar_senha(senha)
+            user = Usuario(nome, email, cargo, senha_armazenada)
+            user.cadastrar_usuario()
+        except:
+            print("Algum dado foi inserido errado!")
 
     def cadastrar_ambiente(self):
-        self.clear_screen()
-        print("CADASTRAR AMBIENTE")
-        nome = input("Digite o nome de ambiente: ")
-        id = int(input("Digite o id do dispositivo do ambiente: "))
-        ip = input("Digite o ip do dispositivo do ambiente: ")
-        port = int(input("Digite o porta do dispositivo do ambiente: "))
-        ambiente = Ambiente(nome, id, ip, port)
-        ambiente_data = {
-            'nome': ambiente.nome,
-            'dispositivo_id': ambiente.dispositivo_id,
-            'dispositivo_ip': ambiente.dispositivo_ip,
-            'dispositivo_port': ambiente.dispositivo_port
-        }
-        self.db.insert("ambientes", ambiente_data)
-        amb = self.db.fetch_one("ambientes", "nome", ambiente.nome)
-        print("Escolha os níveis do ambiente:")
-        time.sleep(2)
-        escolha = self.escolher_niveis([])
-        for i in escolha:
-            data_rel_amb_niv = {
-                'id_ambiente': amb['id'],
-                'id_nivel': i,
-            }
-            self.db.insert("ambiente_niveis", data_rel_amb_niv)
-        admins = self.db.fetch_all("usuarios")
-        if not admins:
-            pass
-        else:
-            for u in admins:
-                data_rel_usu_amb = {
-                    'id_usuario': u['id'],
-                    'id_ambiente': amb['id'],
-                }
-                self.db.insert("usuario_ambientes", data_rel_usu_amb)
+        try:
+            self.clear_screen()
+            print("CADASTRAR AMBIENTE")
+            nome = input("Digite o nome de ambiente: ")
+            id = int(input("Digite o id do dispositivo do ambiente: "))
+            ip = input("Digite o ip do dispositivo do ambiente: ")
+            port = int(input("Digite o porta do dispositivo do ambiente: "))
+            ambiente = Ambiente(nome, id, ip, port)
+            ambiente.cadastrar_ambiente()
+        except:
+            print("Algum dado foi inserido errado!")
 
     def cadastrar_nivel(self):
-        self.clear_screen()
-        print("CADASTRAR NIVEL")
-        nome = input("Digite o nome de nivel: ")
-        limite = int(input("Digite o limite: "))
-        alerta = input("Digite a mensagem de alerta: ")
-        nivel = Nivel(nome, limite, alerta)
-        nivel_data = {
-            'nome': nivel.nome,
-            'limite': nivel.limite,
-            'alerta': nivel.alerta
-        }
-        self.db.insert("niveis", nivel_data)
-
+        try:
+            self.clear_screen()
+            print("CADASTRAR NIVEL")
+            nome = input("Digite o nome de nivel: ")
+            limite = int(input("Digite o limite: "))
+            alerta = input("Digite a mensagem de alerta: ")
+            nivel = Nivel(nome, limite, alerta)
+            nivel_data = {
+                'nome': nivel.nome,
+                'limite': nivel.limite,
+                'alerta': nivel.alerta
+            }
+            self.db.insert("niveis", nivel_data)
+        except:
+            print("Algum dado foi inserido errado!")
 
     def listar_usuarios(self):
         self.clear_screen()
@@ -266,14 +218,10 @@ class FacadeManager:
         user = self.db.fetch_one("usuarios", "email", email)
         if user is None:
             print("Nenhum usuário encontrado")
+            pass
         else:
-            confirma = input(f"Deseja deletar o Usuário: {user['nome']}? [Y/N]").upper()
-            if confirma == "Y":
-                self.db.delete("usuarios", "email", email)
-                print("Usuário deletado com sucesso!")
-                return True
-            else:
-                return False
+            usuario = Usuario(user["nome"], user["email"], user["cargo"], user["senha"])
+            usuario.deletar_usuario()
 
     def deletar_ambiente(self):
         nome = input("Digite o nome: ")
@@ -281,13 +229,8 @@ class FacadeManager:
         if ambiente is None:
             print("Nenhum ambiente encontrado")
         else:
-            confirma = input(f"Deseja deletar o ambiente: {ambiente['nome']}? [Y/N]").upper()
-            if confirma == "Y":
-                self.db.delete("ambientes", "nome", nome)
-                print("Ambiente deletado com sucesso!")
-                return True
-            else:
-                return False
+            amb = Ambiente(ambiente["nome"], ambiente["dispositivo_id"], ambiente["dispositivo_ip"], ambiente["dispositivo_port"])
+            amb.deletar_ambiente()
 
     def deletar_nivel(self):
         nome = input("Digite o nome: ")
@@ -295,43 +238,25 @@ class FacadeManager:
         if nivel is None:
             print("Nenhum nível encontrado")
         else:
-            confirma = input(f"Deseja deletar o ambiente: {nivel['nome']}? [Y/N]").upper()
-            if confirma == "Y":
-                self.db.delete("niveis", "nome", nome)
-                print("Nível deletado com sucesso!")
-                return True
-            else:
-                return False
+            niv = Nivel(nivel["nome"], nivel["limite"], nivel["alerta"])
+            niv.deletar_nivel()
 
 
 
     def editar_nome_usuario(self, email):
         user = self.db.fetch_one("usuarios", "email", email)
-        nome = input("Digite o novo nome: ")
-        if nome == user["nome"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("usuarios", "nome", "email", nome, user["email"])
-            print("Valor alterado com sucesso!")
+        usuario = Usuario(user["nome"], user["email"], user["cargo"], user["senha"])
+        usuario.editar_nome_usuario()
 
     def editar_cargo_usuario(self, email):
         user = self.db.fetch_one("usuarios", "email", email)
-        cargo = int(input("Digite o novo cargo (0 ou 1): "))
-        if cargo == user["cargo"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("usuarios", "cargo", "email", cargo, user["email"])
-            print("Valor alterado com sucesso!")
+        usuario = Usuario(user["nome"], user["email"], user["cargo"], user["senha"])
+        usuario.editar_cargo_usuario()
 
     def editar_senha_usuario(self, email):
         user = self.db.fetch_one("usuarios", "email", email)
-        senha = self.solicitar_senha()
-        senha = self.encriptar_senha(senha)
-        if senha == user["senha"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("usuarios", "senha", "email", senha, user["email"])
-            print("Valor alterado com sucesso!")
+        usuario = Usuario(user["nome"], user["email"], user["cargo"], user["senha"])
+        usuario.editar_senha_usuario()
 
     def adicionar_ambientes_usuario(self, email):
         user = self.db.fetch_one("usuarios", "email", email)
@@ -392,42 +317,29 @@ class FacadeManager:
 
 
 
-
     def editar_nome_ambiente(self, nome):
         ambiente = self.db.fetch_one("ambientes", "nome", nome)
-        novo_nome = input("Digite o novo nome do ambiente: ")
-        if novo_nome == ambiente["nome"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("ambientes", "nome", "nome", novo_nome, ambiente["nome"])
-            print("Nome do ambiente alterado com sucesso!")
+        amb = Ambiente(ambiente["nome"], ambiente["dispositivo_id"], ambiente["dispositivo_ip"],
+                       ambiente["dispositivo_port"])
+        amb.deletar_ambiente()
 
     def editar_dispositivo_id_ambiente(self, nome):
         ambiente = self.db.fetch_one("ambientes", "nome", nome)
-        novo_id = input("Digite o novo ID do dispositivo: ")
-        if novo_id == ambiente["dispositivo_id"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("ambientes", "dispositivo_id", "nome", novo_id, ambiente["nome"])
-            print("ID do dispositivo alterado com sucesso!")
+        amb = Ambiente(ambiente["nome"], ambiente["dispositivo_id"], ambiente["dispositivo_ip"],
+                       ambiente["dispositivo_port"])
+        amb.editar_dispositivo_id_ambiente()
 
     def editar_dispositivo_ip_ambiente(self, nome):
         ambiente = self.db.fetch_one("ambientes", "id", nome)
-        novo_ip = input("Digite o novo IP do dispositivo: ")
-        if novo_ip == ambiente["dispositivo_ip"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("ambientes", "dispositivo_ip", "nome", novo_ip, ambiente["nome"])
-            print("IP do dispositivo alterado com sucesso!")
+        amb = Ambiente(ambiente["nome"], ambiente["dispositivo_id"], ambiente["dispositivo_ip"],
+                       ambiente["dispositivo_port"])
+        amb.editar_dispositivo_ip_ambiente()
 
     def editar_dispositivo_port_ambiente(self, nome):
         ambiente = self.db.fetch_one("ambientes", "id", nome)
-        nova_porta = input("Digite a nova porta do dispositivo: ")
-        if nova_porta == ambiente["dispositivo_port"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("ambientes", "dispositivo_port", "nome", nova_porta, ambiente["nome"])
-            print("Porta do dispositivo alterada com sucesso!")
+        amb = Ambiente(ambiente["nome"], ambiente["dispositivo_id"], ambiente["dispositivo_ip"],
+                       ambiente["dispositivo_port"])
+        amb.editar_dispositivo_port_ambiente()
 
     def adicionar_niveis_ambiente(self, nome):
         ambiente = self.db.fetch_one("ambientes", "nome", nome)
@@ -474,135 +386,54 @@ class FacadeManager:
 
 
 
-
-
     def editar_nome_nivel(self, nome):
         nivel = self.db.fetch_one("niveis", "nome", nome)
-        nome = input("Digite o novo nome: ")
-        if nome == nivel["nome"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("niveis", "nome", "nome", nome, nivel["nome"])
-            print("Valor alterado com sucesso!")
+        niv = Nivel(nivel["nome"], nivel["limite"], nivel["alerta"])
+        niv.editar_nome_nivel()
 
     def editar_limite_nivel(self, nome):
         nivel = self.db.fetch_one("niveis", "nome", nome)
-        limite = int(input("Digite o novo limite: "))
-        if limite == nivel["limite"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("niveis", "limite", "nome", limite, nivel["nome"])
-            print("Valor alterado com sucesso!")
+        niv = Nivel(nivel["nome"], nivel["limite"], nivel["alerta"])
+        niv.editar_limite_nivel()
 
     def editar_alerta_nivel(self, nome):
         nivel = self.db.fetch_one("niveis", "nome", nome)
-        alerta = input("Digite a mensagem de alerta: ")
-        if alerta == nivel["alerta"]:
-            print("Valor igual ao atual, insira outro valor.")
-        else:
-            self.db.update("niveis", "alerta", "nome", alerta, nivel["nome"])
-            print("Valor alterado com sucesso!")
+        niv = Nivel(nivel["nome"], nivel["limite"], nivel["alerta"])
+        niv.editar_alerta_nivel()
+
+    def abrir_monitoramento(self, ambiente_nome):
+        """Abre um novo terminal do CMD e inicia o monitoramento de um ambiente específico."""
+        # Obtém os dados do ambiente pelo nome
+        ambiente = self.db.fetch_one("ambientes", "nome", ambiente_nome)
+        if not ambiente:
+            print(f"Erro: Ambiente '{ambiente_nome}' não encontrado no banco de dados.")
+            return
+        # Caminho completo para o script monitorar_ambiente.py
+        script_path = r"C:\Shiuu_monitor\monitorar_ambiente.py"
+        # Monta o comando para executar o script em uma nova janela do terminal
+        comando = [
+            "start", "cmd", "/k",
+            "python", script_path,
+            ambiente["nome"],  # Passa o nome sem aspas
+            str(ambiente["dispositivo_id"]),  # Passa o dispositivo_id como inteiro
+            ambiente["dispositivo_ip"],  # Passa o IP sem aspas
+            str(ambiente["dispositivo_port"])  # Passa a porta como inteiro
+        ]
+        def abrir_terminal():
+            """Abre uma nova janela do CMD e executa o comando"""
+            try:
+                # Usa subprocess.Popen para abrir uma nova janela do terminal
+                subprocess.Popen(comando, shell=True)
+            except Exception as e:
+                print(f"Erro ao abrir o terminal: {e}")
+        # Inicia uma nova thread para evitar que o programa principal trave
+        thread = threading.Thread(target=abrir_terminal)
+        thread.start()
 
 
     def gerar_relatorio(self):
-        # Solicita as datas ao usuário
-        data_init = input("Digite a data inicial (Ex.: dd-mm-yyyy): ")
-        data_end = input("Digite a data final (Ex.: dd-mm-yyyy): ")
-
-        # Converte as datas para datetime.date
-        try:
-            data_init = datetime.strptime(data_init, "%d-%m-%Y").date()
-            data_end = datetime.strptime(data_end, "%d-%m-%Y").date()
-        except ValueError:
-            print("Formato de data inválido. Use dd-mm-yyyy.")
-            return
-
-        # Busca todas as medições no banco de dados
-        medicoes = self.db.fetch_all("medicoes")
-
-        # Ordena medições por ambiente
-        sorted_medicoes = sorted(medicoes, key=lambda amb: amb["nome_ambiente"])
-
-        # Dicionário para agrupar medições por ambiente
-        ambientes_relatorio = {}
-
-        for medicao in sorted_medicoes:
-            # Converte o campo 'data' (ISO 8601) para datetime
-            try:
-                timestamp_dt = datetime.fromisoformat(medicao["data"])  # Use fromisoformat() para string ISO 8601
-            except ValueError as e:
-                print(f"Erro ao converter timestamp: {e}")
-                continue
-
-            timestamp_data = timestamp_dt.date()  # Apenas a data para filtro
-            timestamp_hora = timestamp_dt.strftime("%H:%M:%S")  # Apenas a hora para exibir
-
-            # Filtra medições dentro do intervalo de datas
-            if data_init <= timestamp_data <= data_end:
-                ambiente_nome = medicao["nome_ambiente"]
-                registro = f"{timestamp_data.strftime('%d/%m/%Y')} {timestamp_hora} - Valor: {medicao['valor']}dB"
-
-                if ambiente_nome not in ambientes_relatorio:
-                    ambientes_relatorio[ambiente_nome] = []
-
-                ambientes_relatorio[ambiente_nome].append(registro)
-
-        # Exibe o relatório formatado
-        if not ambientes_relatorio:
-            print("Nenhuma medição encontrada no período especificado.")
-            return
-
-        print("\n=== RELATÓRIO DE MEDIÇÕES ===")
-        for ambiente, registros in ambientes_relatorio.items():
-            print(f"\n🔹 Ambiente: {ambiente}")
-            for registro in registros:
-                print(registro)
-
-        while True:
-            pdf = input("Deseja gerar pdf? [y/n]: ").lower()
-            if pdf == "y":
-                break
-            elif pdf == "n":
-                return 0
-            else:
-                print("Digite uma opção válida.")
-
-        # Verifica se há dados para gerar o relatório
-        if not ambientes_relatorio:
-            print("Nenhuma medição encontrada no período especificado.")
-            return
-
-        # Criando o PDF
-        pdf = FPDF()
-        pdf.set_auto_page_break(auto=True, margin=15)
-        pdf.add_page()
-        pdf.set_font("Arial", "B", 16)
-
-        # Título do documento
-        pdf.cell(200, 10, "Relatório de Medições", ln=True, align="C")
-        pdf.ln(10)
-
-        pdf.set_font("Arial", "", 12)
-        pdf.cell(200, 10, f"Período: {data_init.strftime('%d/%m/%Y')} a {data_end.strftime('%d/%m/%Y')}", ln=True,
-                 align="C")
-        pdf.ln(10)
-
-        # Adicionando os dados ao PDF
-        for ambiente, registros in ambientes_relatorio.items():
-            pdf.set_font("Arial", "B", 14)
-            pdf.cell(200, 10, f"Ambiente: {ambiente}", ln=True)
-            pdf.ln(5)
-
-            pdf.set_font("Arial", "", 12)
-            for registro in registros:
-                pdf.multi_cell(0, 8, registro)
-            pdf.ln(10)
-
-        # Salvar PDF
-        nome_arquivo = f"relatorio_{datetime.now().strftime('%d-%m-%Y_%H-%M-%S')}.pdf"
-        pdf.output(nome_arquivo)
-
-        print(f"Relatório gerado com sucesso: {nome_arquivo}")
+        relatorio = Relatorio()
+        relatorio.gerar_historico()
 
     def clear_screen(self):
         """Método privado para limpar a tela."""

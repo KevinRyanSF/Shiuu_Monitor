@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class UsuarioStrategy(ABC):
+class UsuarioStrategyAbstract(ABC):
 
     @abstractmethod
     def pode_acessar_usuarios(self):

@@ -13,7 +13,7 @@ except ImportError:
     install("requests")
     import requests  # Tenta importar novamente após a instalação
 
-from Classes.Observer.ObserverAmbiente import Ambiente
+from Classes.Observer.GrupoAmbiente import Ambiente
 
 if __name__ == "__main__":
     # Verifica se todos os argumentos foram passados
