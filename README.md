@@ -19,7 +19,7 @@ O **Shiuu Monitor** é um sistema para monitoramento de níveis de ruído, utili
   - `requests` (para requisições HTTP)
   - `fpdf` (para geração de relatórios em PDF)
   - `subprocess` (para execução de processos)
-  - `threading` (para execução assíncrona)
+  - `threading` (para execução de threads)
 
 ## Estrutura do Projeto
 ```
