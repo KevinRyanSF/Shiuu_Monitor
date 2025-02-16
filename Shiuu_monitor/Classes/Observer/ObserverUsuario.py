@@ -15,6 +15,8 @@ class Usuario(Observer):
     def update(self, ambiente, **kwargs):
         # Configurações de envio de email
         destinatario = self.email
+        if destinatario == "admin":
+            return 0
         SMTP_SERVER = "smtp.gmail.com"
         SMTP_PORT = 587
         EMAIL_REMETENTE = "shiuumonitor@gmail.com"

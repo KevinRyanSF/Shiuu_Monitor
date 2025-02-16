@@ -71,6 +71,17 @@ class BancoDeDados:
 
                         """)
 
+            self.cursor.execute("""
+                        CREATE TABLE IF NOT EXISTS medicoes (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            nome_ambiente TEXT NOT NULL,
+                            valor INTEGER NOT NULL,
+                            data TIMESTAMP NOT NULL,
+                            FOREIGN KEY (nome_ambiente) REFERENCES ambientes(nome) ON DELETE CASCADE
+                        );
+
+                        """)
+
             # Inserir usuário admin se ele ainda não existir
             self.cursor.execute("""
             INSERT OR IGNORE INTO usuarios (nome, email, cargo, senha) 

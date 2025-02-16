@@ -10,6 +10,9 @@ class CommandTelaEditAmbiente(Command):
     def execute(self):
         current_command = self
         ambiente = self.__facade.buscar_ambiente()
+        if not ambiente:
+            from Commands.CommandTelaAmbiente import CommandTelaAmbiente
+            current_command = CommandTelaAmbiente()
         if ambiente:
             while True:
                 self.__facade.clear_screen()

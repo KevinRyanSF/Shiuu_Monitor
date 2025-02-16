@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from datetime import datetime
 import random
 import threading
 import time
@@ -19,7 +20,11 @@ def generate_random_number():
 def get_number():
     global client_connected
     client_connected = True
-    return jsonify({"id": 1, "dado_gerado": current_number})
+    return jsonify({
+        "id": 1,
+        "dado_gerado": current_number,
+        "timestamp": datetime.now().isoformat()  # Retorna o timestamp no formato ISO 8601
+    })
 
 if __name__ == '__main__':
     threading.Thread(target=generate_random_number, daemon=True).start()

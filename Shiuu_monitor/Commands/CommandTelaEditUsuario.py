@@ -9,6 +9,9 @@ class CommandTelaEditUsuario(Command):
     def execute(self):
         current_command = self
         user = self.__facade.buscar_usuario()
+        if not user:
+            from Commands.CommandTelaUsuario import CommandTelaUsuario
+            current_command = CommandTelaUsuario()
         if user:
             while True:
                 self.__facade.clear_screen()

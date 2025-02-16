@@ -1,5 +1,6 @@
 import requests
 import time
+from datetime import datetime, timedelta
 from Classes.Observer.ObserverUsuario import Usuario
 
 class Ambiente:
@@ -10,6 +11,7 @@ class Ambiente:
         self.dispositivo_id = dispositivo_id
         self.dispositivo_ip = dispositivo_ip
         self.dispositivo_port = dispositivo_port
+        self.ultima_notificacao = datetime.now() - timedelta(minutes=5)
 
 
 
@@ -50,10 +52,22 @@ class Ambiente:
                         niveis.append(nivel)
                     if niveis != []:
                         sorted_niveis = sorted(niveis, key=lambda n: n["limite"], reverse=True)
-
                         for lim in sorted_niveis:
                             if lim["limite"] < data["dado_gerado"]:
                                 print(lim["alerta"])
+
+                                timestamp_atual = datetime.fromisoformat(data["timestamp"])
+                                if self.ultima_notificacao and (timestamp_atual - self.ultima_notificacao) < timedelta(
+                                        minutes=5):
+                                    continue
+                                data_medicao = {
+                                    'nome_ambiente': amb_atual["nome"],
+                                    'valor': data["dado_gerado"],
+                                    'data': data["timestamp"]
+                                }
+                                self.__facade.db.insert("medicoes", data_medicao)
+
+                                self.ultima_notificacao = timestamp_atual
                                 self.notificar_users()
                                 break
                             else:

@@ -10,6 +10,9 @@ class CommandTelaEditNivel(Command):
     def execute(self):
         current_command = self
         nivel = self.__facade.buscar_niveis()
+        if not nivel:
+            from Commands.CommandTelaNivel import CommandTelaNivel
+            current_command = CommandTelaNivel()
         if nivel:
             while True:
                 self.__facade.clear_screen()

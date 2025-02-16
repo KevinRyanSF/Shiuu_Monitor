@@ -42,9 +42,7 @@ class CommandTelaPrincipal(Command):
                     current_command = CommandTelaNivel()
                 break
             elif opcao == "4":
-                from Commands.CommandExibirMenu import CommandExibirMenu
-                print("Saindo...")
-                current_command = CommandExibirMenu()
+                self.__facade.gerar_relatorio()
                 break
             elif opcao == "5":
                 from Commands.CommandExibirMenu import CommandExibirMenu

@@ -1,6 +1,4 @@
-import os, maskpass, sys, copy, time
-import threading
-import subprocess
+import os, maskpass, copy, time
 
 from Classes.Observer.ObserverUsuario import Usuario
 from Classes.Observer.ObserverAmbiente import Ambiente
@@ -8,6 +6,8 @@ from Classes.nivel import Nivel
 from Proxy.ProxyLogin import ProxyLogin
 from database import BancoDeDados
 from hashlib import sha256
+from datetime import datetime
+from fpdf import FPDF
 
 
 class FacadeManager:
@@ -31,8 +31,7 @@ class FacadeManager:
         self.clear_screen()
         print("LOGIN")
         email = input("Digite o email: ")
-        password = input("Digite a senha: ")
-        # password = self.solicitar_senha()
+        password = self.solicitar_senha()
         login_validation = ProxyLogin()
         if login_validation.autenticar(email, password):
             self._usuario_logado = self.db.fetch_one("usuarios", "email", email)
@@ -119,11 +118,9 @@ class FacadeManager:
         print("CADASTRAR USUÁRIO")
         nome = input("Digite o nome de usuário: ")
         email = input("Digite o email: ")
-        cargo = int(input("Digite o cargo (0 ou 1): "))
+        cargo = int(input("Digite o cargo (0-Fiscal ou 1-Admin): "))
         while True:
-            # senha = input("Digite a senha: ")
             senha = self.solicitar_senha()
-            # conf_senha = input("Confirme a senha: ")
             conf_senha = self.solicitar_senha()
             if senha == conf_senha:
                 break
@@ -150,13 +147,25 @@ class FacadeManager:
                 }
                 self.db.insert("usuario_ambientes", data_rel_user_amb)
 
+        else:
+            all_ambientes = self.db.fetch_all("ambientes")
+            if not all_ambientes:
+                pass
+            else:
+                for i in all_ambientes:
+                    data_rel_user_amb = {
+                        'id_usuario': user['id'],
+                        'id_ambiente': i['id'],
+                    }
+                    self.db.insert("usuario_ambientes", data_rel_user_amb)
+
     def cadastrar_ambiente(self):
         self.clear_screen()
         print("CADASTRAR AMBIENTE")
         nome = input("Digite o nome de ambiente: ")
-        ip = "127.0.0.1"
-        id = 1
-        port = 5000
+        id = int(input("Digite o id do dispositivo do ambiente: "))
+        ip = input("Digite o ip do dispositivo do ambiente: ")
+        port = int(input("Digite o porta do dispositivo do ambiente: "))
         ambiente = Ambiente(nome, id, ip, port)
         ambiente_data = {
             'nome': ambiente.nome,
@@ -175,6 +184,16 @@ class FacadeManager:
                 'id_nivel': i,
             }
             self.db.insert("ambiente_niveis", data_rel_amb_niv)
+        admins = self.db.fetch_all("usuarios")
+        if not admins:
+            pass
+        else:
+            for u in admins:
+                data_rel_usu_amb = {
+                    'id_usuario': u['id'],
+                    'id_ambiente': amb['id'],
+                }
+                self.db.insert("usuario_ambientes", data_rel_usu_amb)
 
     def cadastrar_nivel(self):
         self.clear_screen()
@@ -200,11 +219,10 @@ class FacadeManager:
             else:
                 for u in users:
                     amb_ids = []
-                    if u["cargo"] == 0:
-                        amb = self.db.fetch_all("usuario_ambientes")
-                        for a in amb:
-                            if a["id_usuario"] == u["id"]:
-                                amb_ids.append(a["id_ambiente"])
+                    amb = self.db.fetch_all("usuario_ambientes")
+                    for a in amb:
+                        if a["id_usuario"] == u["id"]:
+                            amb_ids.append(a["id_ambiente"])
                     print(f"ID: {u['id']}, Nome: {u['nome']}, Email: {u['email']}, Cargo: {u['cargo']}, Ambientes: {amb_ids}")
             confirma = input("Digite 0 para sair: ")
             if confirma == "0":
@@ -334,17 +352,18 @@ class FacadeManager:
                     }
                     self.db.insert("usuario_ambientes", data_rel_user_amb)
         else:
-            try:
-                ambientes = self.db.fetch_all("ambientes")
+            ambientes = self.db.fetch_all("ambientes")
+            if not ambientes:
+                return False
+            else:
                 for a in ambientes:
                     data_rel_user_amb = {
                         'id_usuario': user['id'],
                         'id_ambiente': a["id"],
                     }
                     self.db.insert("usuario_ambientes", data_rel_user_amb)
-            except:
-                pass
-            print("Valor alterado com sucesso!")
+
+                print("Valor alterado com sucesso!")
 
     def remover_ambientes_usuario(self, email):
         user = self.db.fetch_one("usuarios", "email", email)
@@ -484,40 +503,106 @@ class FacadeManager:
             self.db.update("niveis", "alerta", "nome", alerta, nivel["nome"])
             print("Valor alterado com sucesso!")
 
-    def abrir_monitoramento(self, ambiente_nome):
-        """Abre um novo terminal do CMD e inicia o monitoramento de um ambiente específico."""
 
-        # Obtém os dados do ambiente pelo nome
-        ambiente = self.db.fetch_one("ambientes", "nome", ambiente_nome)
-        if not ambiente:
-            print(f"Erro: Ambiente '{ambiente_nome}' não encontrado no banco de dados.")
+    def gerar_relatorio(self):
+        # Solicita as datas ao usuário
+        data_init = input("Digite a data inicial (Ex.: dd-mm-yyyy): ")
+        data_end = input("Digite a data final (Ex.: dd-mm-yyyy): ")
+
+        # Converte as datas para datetime.date
+        try:
+            data_init = datetime.strptime(data_init, "%d-%m-%Y").date()
+            data_end = datetime.strptime(data_end, "%d-%m-%Y").date()
+        except ValueError:
+            print("Formato de data inválido. Use dd-mm-yyyy.")
             return
 
-        # Caminho completo para o script monitorar_ambiente.py
-        script_path = r"C:\Shiuu_monitor\monitorar_ambiente.py"
+        # Busca todas as medições no banco de dados
+        medicoes = self.db.fetch_all("medicoes")
 
-        # Monta o comando para executar o script em uma nova janela do terminal
-        comando = [
-            "start", "cmd", "/k",
-            "python", script_path,
-            ambiente["nome"],  # Passa o nome sem aspas
-            str(ambiente["dispositivo_id"]),  # Passa o dispositivo_id como inteiro
-            ambiente["dispositivo_ip"],  # Passa o IP sem aspas
-            str(ambiente["dispositivo_port"])  # Passa a porta como inteiro
-        ]
+        # Ordena medições por ambiente
+        sorted_medicoes = sorted(medicoes, key=lambda amb: amb["nome_ambiente"])
 
-        def abrir_terminal():
-            """Abre uma nova janela do CMD e executa o comando"""
+        # Dicionário para agrupar medições por ambiente
+        ambientes_relatorio = {}
+
+        for medicao in sorted_medicoes:
+            # Converte o campo 'data' (ISO 8601) para datetime
             try:
-                # Usa subprocess.Popen para abrir uma nova janela do terminal
-                subprocess.Popen(comando, shell=True)
-            except Exception as e:
-                print(f"Erro ao abrir o terminal: {e}")
+                timestamp_dt = datetime.fromisoformat(medicao["data"])  # Use fromisoformat() para string ISO 8601
+            except ValueError as e:
+                print(f"Erro ao converter timestamp: {e}")
+                continue
 
-        # Inicia uma nova thread para evitar que o programa principal trave
-        thread = threading.Thread(target=abrir_terminal)
-        thread.start()
+            timestamp_data = timestamp_dt.date()  # Apenas a data para filtro
+            timestamp_hora = timestamp_dt.strftime("%H:%M:%S")  # Apenas a hora para exibir
 
+            # Filtra medições dentro do intervalo de datas
+            if data_init <= timestamp_data <= data_end:
+                ambiente_nome = medicao["nome_ambiente"]
+                registro = f"{timestamp_data.strftime('%d/%m/%Y')} {timestamp_hora} - Valor: {medicao['valor']}dB"
+
+                if ambiente_nome not in ambientes_relatorio:
+                    ambientes_relatorio[ambiente_nome] = []
+
+                ambientes_relatorio[ambiente_nome].append(registro)
+
+        # Exibe o relatório formatado
+        if not ambientes_relatorio:
+            print("Nenhuma medição encontrada no período especificado.")
+            return
+
+        print("\n=== RELATÓRIO DE MEDIÇÕES ===")
+        for ambiente, registros in ambientes_relatorio.items():
+            print(f"\n🔹 Ambiente: {ambiente}")
+            for registro in registros:
+                print(registro)
+
+        while True:
+            pdf = input("Deseja gerar pdf? [y/n]: ").lower()
+            if pdf == "y":
+                break
+            elif pdf == "n":
+                return 0
+            else:
+                print("Digite uma opção válida.")
+
+        # Verifica se há dados para gerar o relatório
+        if not ambientes_relatorio:
+            print("Nenhuma medição encontrada no período especificado.")
+            return
+
+        # Criando o PDF
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        pdf.set_font("Arial", "B", 16)
+
+        # Título do documento
+        pdf.cell(200, 10, "Relatório de Medições", ln=True, align="C")
+        pdf.ln(10)
+
+        pdf.set_font("Arial", "", 12)
+        pdf.cell(200, 10, f"Período: {data_init.strftime('%d/%m/%Y')} a {data_end.strftime('%d/%m/%Y')}", ln=True,
+                 align="C")
+        pdf.ln(10)
+
+        # Adicionando os dados ao PDF
+        for ambiente, registros in ambientes_relatorio.items():
+            pdf.set_font("Arial", "B", 14)
+            pdf.cell(200, 10, f"Ambiente: {ambiente}", ln=True)
+            pdf.ln(5)
+
+            pdf.set_font("Arial", "", 12)
+            for registro in registros:
+                pdf.multi_cell(0, 8, registro)
+            pdf.ln(10)
+
+        # Salvar PDF
+        nome_arquivo = f"relatorio_{datetime.now().strftime('%d-%m-%Y_%H-%M-%S')}.pdf"
+        pdf.output(nome_arquivo)
+
+        print(f"Relatório gerado com sucesso: {nome_arquivo}")
 
     def clear_screen(self):
         """Método privado para limpar a tela."""
