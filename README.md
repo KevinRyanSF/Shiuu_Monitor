@@ -53,7 +53,7 @@ python Shiuu_monitor/main.py
 ---
 ## Recursos Adicionais
 
-###Para acessar os vídeos do projeto, utilize o link abaixo:
+Para acessar os vídeos do projeto, utilize o link abaixo:
 
 Videos Técnico
 https://drive.google.com/file/d/1LfV49uoNtyX-VDqiUQJjwVgkzzKyLL5p/view?usp=drive_link
