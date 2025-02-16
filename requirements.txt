@@ -1,0 +1,5 @@
+maskpass
+requests
+fpdf
+subprocess
+threading
