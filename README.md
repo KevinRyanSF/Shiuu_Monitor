@@ -51,4 +51,18 @@ pip install -r requirements.txt
 python Shiuu_monitor/main.py
 ```
 ---
+## Recursos Adicionais
+
+###Para acessar os vídeos do projeto, utilize o link abaixo:
+
+Videos Técnico
+https://drive.google.com/file/d/1LfV49uoNtyX-VDqiUQJjwVgkzzKyLL5p/view?usp=drive_link
+
+Video Comercial
+https://drive.google.com/file/d/1CdZx0tNo7KcdEItmqIQ158Y-O1Qz9xuL/view?usp=drive_link
+
+Video Demonstrativo
+https://drive.google.com/file/d/10fYpoJlL8l7oRqSBbX_yrWrcnqe5Piy0/view?usp=drive_link
+
+
 **Desenvolvido por:** [Kevin Ryan, Demétrio Luna, Thiago Barbosa]
